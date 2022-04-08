@@ -3,6 +3,8 @@ package com.vortexbird.bank.controller;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -30,29 +32,29 @@ public class CustomerController {
 	@Autowired
 	CustomerMapper customerMapper;
 	
-	@PostMapping("/save")
-	public ResponseEntity<?> save(@RequestBody CustomerDTO customerDTO)throws Exception{
+	@PostMapping
+	public ResponseEntity<?> save(@RequestBody @Valid CustomerDTO customerDTO)throws Exception{
 		Customer customer = customerMapper.toCustomer(customerDTO);
 		customer=customerService.save(customer);
 		customerDTO = customerMapper.toCustomerDTO(customer);
 		return ResponseEntity.ok().body(customerDTO);
 	}
 	
-	@PutMapping("/update")
-	public ResponseEntity<?> update(@RequestBody CustomerDTO customerDTO)throws Exception{
+	@PutMapping
+	public ResponseEntity<?> update(@RequestBody @Valid CustomerDTO customerDTO)throws Exception{
 		Customer customer = customerMapper.toCustomer(customerDTO);
 		customer=customerService.update(customer);
 		customerDTO = customerMapper.toCustomerDTO(customer);
 		return ResponseEntity.ok().body(customerDTO);
 	}
 	
-	@DeleteMapping("/delete/{id}")
+	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delete(@PathVariable("id") Integer id) throws Exception{
 		customerService.deleteById(id);
 		return ResponseEntity.ok().body(null);
 	}
 	
-	@GetMapping("/findAll")
+	@GetMapping
 	public ResponseEntity<?> findAll()throws Exception{
 		List<Customer> customers = customerService.findAll();
 		List<CustomerDTO> customerDTOs = customerMapper.toCustomerDTOs(customers);
@@ -60,7 +62,7 @@ public class CustomerController {
 		return ResponseEntity.ok().body(customerDTOs);		
 	}
 	
-	@GetMapping("/findById/{id}")
+	@GetMapping("/{id}")
 	public ResponseEntity<?> findById(@PathVariable("id") Integer id) throws Exception{
 		Customer customer = null;
 		CustomerDTO customerDTO = null;
@@ -74,4 +76,10 @@ public class CustomerController {
 		customerDTO = customerMapper.toCustomerDTO(customer);
 		return ResponseEntity.ok().body(customerDTO);
 	}
+	@GetMapping("/suma/{n}/{m}")
+	public ResponseEntity<?> suma(@PathVariable("n") Integer n, @PathVariable("m") Integer m) throws Exception{
+		Integer respuesta = n + m;
+		return ResponseEntity.ok().body(respuesta);
+	}
 }
+
